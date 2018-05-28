@@ -9,6 +9,7 @@ public class Hero : MonoBehaviour {
     // Use this for initialization
     void Start () {
         myBody = this.GetComponent<Rigidbody2D>();
+        LevelController.current.setStartPosition(myBody.transform.position);
     }
 	
 	// Update is called once per frame
@@ -20,12 +21,41 @@ public class Hero : MonoBehaviour {
     {
     
         float value = Input.GetAxis("Horizontal");
-        if (Mathf.Abs(value) > 0)
+        float valueY = Input.GetAxis("Vertical");
+        Animator animator = GetComponent<Animator>();
+        
+        if ((valueY) > 0)
+        {
+            Vector2 vel = myBody.velocity;
+            vel.y = valueY * speed;
+
+            myBody.velocity = vel;
+            animator.SetBool("jump", true);
+           
+        }
+        else
+        {
+            
+            animator.SetBool("jump", false);
+        }
+            if (Mathf.Abs(value) > 0)
         {
             Vector2 vel = myBody.velocity;
             vel.x = value * speed;
+            
+            
             myBody.velocity = vel;
+           
+            animator.SetBool("run", true);
         }
+        else
+        {
+            animator.SetBool("run", false);
+        }
+
+
+
+
         SpriteRenderer sr = GetComponent<SpriteRenderer>();
         if (value < 0)
         {
@@ -35,6 +65,8 @@ public class Hero : MonoBehaviour {
         {
             sr.flipX = false;
         }
+
+
 
 
     }
